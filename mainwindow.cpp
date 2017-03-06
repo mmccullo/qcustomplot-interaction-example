@@ -251,7 +251,7 @@ void MainWindow::mousePress()
 	QList<QCPAxis*> axesList;
 
 	// if an axis is selected, only allow the direction of that axis to be dragged
-	// if no axis is selected, both directions may be dragged
+	// if no axis is selected, check if a graph is selected and drag both axes
 
 	if (ui->customPlot->xAxis->selectedParts().testFlag(QCPAxis::spAxis))
 	{
@@ -271,8 +271,26 @@ void MainWindow::mousePress()
 	}
 	else
 	{
-		axesList.append(ui->customPlot->xAxis);
-		axesList.append(ui->customPlot->yAxis);
+		bool selectedGraph = false;
+
+		// is a graph selected?
+		for (int i = 0; i < ui->customPlot->graphCount(); ++i)
+		{
+			QCPGraph *graph = ui->customPlot->graph(i);
+			if (graph->selected())
+			{
+				selectedGraph = true;
+				axesList.append(graph->keyAxis());
+				axesList.append(graph->valueAxis());
+				break;
+			}
+		}
+
+		if (!selectedGraph)
+		{
+			axesList.append(ui->customPlot->xAxis);
+			axesList.append(ui->customPlot->yAxis);
+		}
 	}
 
 	// set the axes to drag
@@ -284,7 +302,7 @@ void MainWindow::mouseWheel()
 	QList<QCPAxis*> axesList;
 
 	// if an axis is selected, only allow the direction of that axis to be zoomed
-	// if no axis is selected, both directions may be zoomed
+	// if no axis is selected, check if a graph is selected and zoom both axes
 
 	if (ui->customPlot->xAxis->selectedParts().testFlag(QCPAxis::spAxis))
 	{
@@ -304,10 +322,29 @@ void MainWindow::mouseWheel()
 	}
 	else
 	{
-		axesList.append(ui->customPlot->xAxis);
-		axesList.append(ui->customPlot->yAxis);
+		bool selectedGraph = false;
+
+		// is a graph selected?
+		for (int i = 0; i < ui->customPlot->graphCount(); ++i)
+		{
+			QCPGraph *graph = ui->customPlot->graph(i);
+			if (graph->selected())
+			{
+				selectedGraph = true;
+				axesList.append(graph->keyAxis());
+				axesList.append(graph->valueAxis());
+				break;
+			}
+		}
+
+		if (!selectedGraph)
+		{
+			axesList.append(ui->customPlot->xAxis);
+			axesList.append(ui->customPlot->yAxis);
+		}
 	}
 
+	// set the axes to zoom
 	ui->customPlot->axisRect()->setRangeZoomAxes(axesList);
 }
 
