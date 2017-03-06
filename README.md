@@ -5,3 +5,4 @@ This example uses QCustomPlot (v2.0.0 or later) to create a plot with four indep
 
 The key in allowing independent dragging and zooming of each axis (left, right, bottom, and top) is the use of setRangeDragAxes() and setRangeZoomAxes() limited to the list of axes you wish to drag or zoom.
 
+In addition to the original .pro file, a solution file is also provided that is compatible with Visual Studio 2015.
